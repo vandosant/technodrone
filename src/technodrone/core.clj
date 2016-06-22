@@ -22,13 +22,16 @@
 
 (defn parse
   [string]
-  (map #(re-seq #"\w+\/\w+\/\w+\s\d+:\d+\d+:\d+|[\w\s]+|\".*,.*\"" %)
+  (map (fn [row]
+         (clojure.string/split
+           (clojure.string/replace row #"(\".*)(,)(.*\")" "$1&44$3")
+           #","))
        (clojure.string/split string #"\n")))
 
 (defn normalize
   [row]
   (if (> (count row) (count job-keys))
-    (println row)
+    row
     row))
 
 (defn mapify
