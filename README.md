@@ -1,6 +1,6 @@
 # technodrone
 
-FIXME: description
+Data analysis of the tech industry
 
 ## Installation
 
