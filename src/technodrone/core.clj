@@ -1,4 +1,7 @@
-(ns technodrone.core)
+(ns technodrone.core
+  (:require [clojure.java.browse :as browse]
+            [technodrone.visualization.svg :refer [xml]])
+  (:gen-class))
 (def filename "Salaries.csv")
 (def job-keys [:timestamp :employer :location :job-title :years-employed
                :years-experience :salary])
@@ -11,9 +14,9 @@
                   :employer identity
                   :location identity
                   :job-title identity
-                  :years-employed identity
-                  :years-experience identity
-                  :salary identity
+                  :years-employed str->int
+                  :years-experience str->int
+                  :salary str->int
                   })
 
 (defn convert
@@ -28,7 +31,7 @@
 (defn normalize
   [row]
   (if (> (count row) 12)
-    (println (count row))
+    row
     row))
 
 (defn mapify
@@ -39,3 +42,16 @@
                    {}
                    (map vector job-keys (normalize row))))
        (rest rows)))
+
+(defn template
+  [contents]
+  (str "<style>polyline { fill:none; stroke: #ceecee; stroke-width:3}</style>"
+       contents))
+
+(defn -main
+  [& args]
+  (let [filename "graph.html"]
+    (->> (mapify (parse (slurp filename)))
+         (xml 50 100)
+         template
+         (spit filename))))
