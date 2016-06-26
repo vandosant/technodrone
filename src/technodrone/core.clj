@@ -25,12 +25,15 @@
 
 (defn parse
   [string]
-  (map #(clojure.string/split % #",")
+  (map (fn [row]
+         (clojure.string/split
+           (clojure.string/replace row #"(\".*)(,)(.*\")" "$1&44$3")
+           #","))
        (clojure.string/split string #"\n")))
 
 (defn normalize
   [row]
-  (if (> (count row) 12)
+  (if (> (count row) (count job-keys))
     row
     row))
 
