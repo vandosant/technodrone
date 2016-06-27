@@ -2,13 +2,16 @@
   (:require [clojure.java.browse :as browse]
             [technodrone.visualization.svg :refer [xml]])
   (:gen-class))
-(def filename "Salaries.csv")
+
 (def job-keys [:timestamp :employer :location :job-title :years-employed
                :years-experience :salary])
 
 (defn str->int
   [str]
-  (Integer. str))
+  (let [nums-in-str (re-find #"\d+" str)]
+  (if (clojure.string/blank? nums-in-str)
+    nil
+    (bigint nums-in-str))))
 
 (def conversions {:timestamp identity
                   :employer identity
@@ -53,8 +56,11 @@
 
 (defn -main
   [& args]
-  (let [filename "graph.html"]
-    (->> (mapify (parse (slurp filename)))
+  (let [output-filename "graph.html"
+        data-filename "Salaries.csv"]
+    (->> (filter #(and (:salary %)
+                       (:years-experience %))
+                 (mapify (parse (slurp data-filename))))
          (xml 50 100)
          template
-         (spit filename))))
+         (spit output-filename))))
