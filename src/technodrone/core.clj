@@ -11,7 +11,7 @@
   (let [nums-in-str (re-find #"\d+" str)]
   (if (clojure.string/blank? nums-in-str)
     nil
-    (bigint nums-in-str))))
+    (read-string nums-in-str))))
 
 (def conversions {:timestamp identity
                   :employer identity
