@@ -68,6 +68,6 @@
     (->> (filter #(and (:salary %)
                        (:years-experience %))
                  (mapify (parse (slurp data-filename))))
-         (xml 50 100)
+         (xml 500 500)
          template
          (spit output-filename))))
