@@ -17,12 +17,16 @@
   (let [mincoords (min locations)]
     (map #(merge-with - % mincoords) locations)))
 
+(defn multiply-and-round
+  [num1 num2]
+  (int (* num1 num2)))
+
 (defn scale
   [width height locations]
   (let [maxcoords (max locations)
         ratio {:salary (/ height (:salary maxcoords))
                :years-experience (/ width (:years-experience maxcoords))}]
-    (map #(merge-with * % ratio) locations)))
+    (map #(merge-with multiply-and-round % ratio) locations)))
 
 (defn datamap->point
   [datamap]
