@@ -13,13 +13,20 @@
     nil
     (read-string nums-in-str))))
 
+(defn pad-salary
+  [str]
+  (let [nums-in-str (re-find #"\d+" str)]
+    (if (< (count nums-in-str) 5)
+      (str->int "")
+      (str->int nums-in-str))))
+
 (def conversions {:timestamp identity
                   :employer identity
                   :location identity
                   :job-title identity
                   :years-employed str->int
                   :years-experience str->int
-                  :salary str->int
+                  :salary pad-salary
                   })
 
 (defn convert
