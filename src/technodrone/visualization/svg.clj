@@ -30,15 +30,24 @@
 
 (defn datamap->point
   [datamap]
-  (str (:salary datamap) "," (:years-experience datamap)))
+  (list (:salary datamap) (:years-experience datamap)))
 
 (defn points
   [locations]
-  (s/join " " (map datamap->point locations)))
+  (map datamap->point locations))
 
 (defn line
   [points]
   (str "<polyline points=\"" points "\" />"))
+
+(defn circle
+  [radius point]
+  (str "<circle r=\"" radius "\"" "cy=\"" (first point) "\"" "cx=\"" (last point) "\"" "/>"))
+
+(defn circles
+  [points]
+  (s/join " " (map (fn [point]
+                     (circle 5 point)) points)))
 
 (defn transform
   [width height locations]
@@ -52,6 +61,6 @@
        "<g>"
        (-> (transform width height locations)
            points
-           line)
+           circles)
        "</g>"
        "</svg>"))
