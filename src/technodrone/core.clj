@@ -66,6 +66,7 @@
   (let [output-filename "graph.html"
         data-filename "Salaries.csv"]
     (->> (filter #(and (:salary %)
+                       (< (:salary %) 300000)
                        (:years-experience %))
                  (mapify (parse (slurp data-filename))))
          (xml 500 500)
