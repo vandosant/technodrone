@@ -45,9 +45,9 @@
   (str "<circle r=\"" radius "\"" "cy=\"" (first point) "\"" "cx=\"" (last point) "\"" "/>"))
 
 (defn circles
-  [points]
+  [radius points]
   (s/join " " (map (fn [point]
-                     (circle 5 point)) points)))
+                     (circle radius point)) points)))
 
 (defn transform
   [width height locations]
@@ -59,8 +59,8 @@
   [width height locations]
   (str "<svg height=\"" height "\" width=\"" width "\">"
        "<g>"
-       (-> (transform width height locations)
+       (->> (transform width height locations)
            points
-           circles)
+           (circles 3))
        "</g>"
        "</svg>"))
