@@ -8,7 +8,9 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-    => (mapify (parse (slurp filename)))
+    => lein run
+
+Open graph.html file that is generated.
 
 ## Options
 
