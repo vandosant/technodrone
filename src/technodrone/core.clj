@@ -61,8 +61,7 @@
   (str "<style>polyline { fill:none; stroke: #ceecee; stroke-width:3}</style>"
        contents))
 
-(defn -main
-  [& args]
+(defn get-graph []
   (let [output-filename "graph.html"
         data-filename "Salaries.csv"]
     (->> (filter #(and (:salary %)
@@ -72,3 +71,7 @@
          (xml 500 500)
          template
          (spit output-filename))))
+
+(defn -main
+  [& args]
+  (get-graph))
