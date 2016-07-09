@@ -1,6 +1,7 @@
 (ns technodrone.core
   (:require [clojure.java.browse :as browse]
-            [technodrone.visualization.svg :refer [xml]])
+            [technodrone.visualization.svg :refer [xml]]
+            [technodrone.crawler.get :refer [fetch-data]])
   (:gen-class))
 
 (def job-keys [:timestamp :employer :location :job-title :years-employed
@@ -74,4 +75,5 @@
 
 (defn -main
   [& args]
-  (get-graph))
+  (get-graph)
+  (fetch-data "PUBLISHER_ID"))
