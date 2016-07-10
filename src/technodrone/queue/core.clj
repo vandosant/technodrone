@@ -2,28 +2,26 @@
   (:require [technodrone.crawler.get :refer [fetch-data]]))
 
 (def queue (atom (vector)))
+(def work (atom (vector)))
 
-(defn crawl-and-dequeue
-  [job]
-  (fetch-data (:msg job))
+(defn handle-crawl-response
+  [res]
+  (delay (println "Crawler response received"))
   (swap! queue rest))
+
+(defn work-complete []
+  (println "Job's done!"))
 
 (defn push-alert
   [key watched old-state new-state]
   (let [next-job (first new-state)]
-  (if (= (:queue next-job) "crawler")
-    (crawl-and-dequeue next-job))))
+    (if (= (:queue next-job) "crawler")
+      (let [new-work (fetch-data (:msg next-job))]
+        (swap! work
+               (fn [current-work]
+                 (conj current-work new-work)))))))
 
 (add-watch queue :queue-push-alert push-alert)
-
-(defmacro enqueue
-  ([q concurrent-promise-name concurrent]
-   `(let [~concurrent-promise-name (promise)]
-      (future (deliver ~concurrent-promise-name ~concurrent))
-      (deref ~q)
-      ~concurrent-promise-name))
-  ([concurrent-promise-name concurrent]
-   `(enqueue (future) ~concurrent-promise-name ~concurrent)))
 
 (defn push [queue-id msg]
   (swap! queue
