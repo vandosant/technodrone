@@ -1,20 +1,19 @@
-(ns technodrone.queue.core)
+(ns technodrone.queue.core
+  (:require [technodrone.crawler.get :refer [fetch-data]]))
 
-(defmacro wait
-  [timeout & body]
-  `(do (Thread/sleep ~timeout) ~@body))
+(def queue (atom (vector)))
 
 (defmacro enqueue
-  ([q concurrent-promise-name concurrent serialized]
+  ([q concurrent-promise-name concurrent]
    `(let [~concurrent-promise-name (promise)]
       (future (deliver ~concurrent-promise-name ~concurrent))
       (deref ~q)
-      ~serialized
       ~concurrent-promise-name))
-  ([concurrent-promise-name concurrent serialized]
-   `(enqueue (future) ~concurrent-promise-name ~concurrent ~serialized)))
+  ([concurrent-promise-name concurrent]
+   `(enqueue (future) ~concurrent-promise-name ~concurrent)))
 
-(defn push [msg]
-  (time @(-> (enqueue queue-id (wait 100 "Message 1 Accepted") (println @queue-id))
-             (enqueue queue-id (wait 200 "Message 2 Accepted") (println @queue-id))
-             (enqueue queue-id (wait 150 msg) (println @queue-id)))))
+(defn push [queue-id msg]
+  (swap! queue
+         (fn [current-state]
+           (conj current-state (hash-map queue-id msg))))
+  (println queue))

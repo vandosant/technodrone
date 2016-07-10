@@ -1,7 +1,7 @@
 (ns technodrone.core
   (:require [clojure.java.browse :as browse]
+            [clojure.data.json :as json]
             [technodrone.visualization.svg :refer [xml]]
-            [technodrone.crawler.get :refer [fetch-data]]
             [technodrone.queue.core :refer [push]])
   (:gen-class))
 
@@ -76,6 +76,6 @@
 
 (defn -main
   [& args]
-  ;;(get-graph)
-  ;;(fetch-data "PUBLISHER_ID")
-  (push "do something"))
+  (push "crawler" (json/write-str {:method :fetch-data
+                                   :url "http://api.indeed.com/ads/apisearch"
+                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"})))
