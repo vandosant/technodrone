@@ -76,6 +76,6 @@
 
 (defn -main
   [& args]
-  (push "crawler" (json/write-str {:method :fetch-data
-                                   :url "http://api.indeed.com/ads/apisearch"
-                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"})))
+  (push "crawler" (json/write-str {:url "http://api.indeed.com/ads/apisearch"
+                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"}))
+  (push "crawler" (json/write-str {:url "https://remoteok.io/index.json"})))

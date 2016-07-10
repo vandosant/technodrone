@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [aleph "0.4.1"]
+                 [http-kit "2.2.0-beta1"]
                  [org.clojure/data.json "0.2.6"]]
   :main ^:skip-aot technodrone.core
   :target-path "target/%s"
