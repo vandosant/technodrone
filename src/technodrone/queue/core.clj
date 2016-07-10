@@ -3,6 +3,19 @@
 
 (def queue (atom (vector)))
 
+(defn crawl-and-dequeue
+  [job]
+  (fetch-data (:msg job))
+  (swap! queue rest))
+
+(defn push-alert
+  [key watched old-state new-state]
+  (let [next-job (first new-state)]
+  (if (= (:queue next-job) "crawler")
+    (crawl-and-dequeue next-job))))
+
+(add-watch queue :queue-push-alert push-alert)
+
 (defmacro enqueue
   ([q concurrent-promise-name concurrent]
    `(let [~concurrent-promise-name (promise)]
@@ -15,5 +28,4 @@
 (defn push [queue-id msg]
   (swap! queue
          (fn [current-state]
-           (conj current-state (hash-map queue-id msg))))
-  (println queue))
+           (conj current-state (hash-map :queue queue-id :msg msg)))))
