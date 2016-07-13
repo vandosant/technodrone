@@ -2,7 +2,7 @@
   (:require [technodrone.crawler.get :refer [fetch-data]]))
 
 (def queue (atom (vector)))
-(def workers (atom (list)))
+(def workers (atom (hash-map)))
 
 (defn handle-crawl-response
   [res]
@@ -12,17 +12,29 @@
 (defn work-complete []
   (println "Job's done!"))
 
-(add-watch queue :queue-push-alert
-  (fn push-alert
-    [key watched old-state new-state]
-      (println "State: " new-state)))
+(defn drain
+  ([q]
+   (let [next-task (first q)]
+     (swap! queue (fn [current-state]
+                    (rest current-state)))
+     (drain @queue next-task)))
+  ([q next-task]
+   (println "Executing next task!")
+   ;;(eval ((:queue (next-task)) workers)
+   (if (empty? q)
+     (println "Job's done!")
+     (let [next-task (first q)]
+       (swap! queue (fn [current-state]
+                      (rest current-state)))
+       (drain @queue next-task)))))
 
 (defn push [queue-id task]
   (swap! queue
          (fn [current-state]
-           (conj current-state (hash-map :queue queue-id :task task)))))
+           (conj current-state (hash-map :queue queue-id :task task))))
+  (drain @queue))
 
 (defn worker [queue-id task-fn]
   (swap! workers
          (fn [current-state]
-           (conj current-state {queue-id task-fn}))))
+           (hash-map current-state {queue-id task-fn}))))
