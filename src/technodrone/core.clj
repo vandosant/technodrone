@@ -2,7 +2,7 @@
   (:require [clojure.java.browse :as browse]
             [clojure.data.json :as json]
             [technodrone.visualization.svg :refer [xml]]
-            [technodrone.queue.core :refer [worker]])
+            [technodrone.queue.core :refer [worker push]])
   (:gen-class))
 
 (def job-keys [:timestamp :employer :location :job-title :years-employed
@@ -76,8 +76,8 @@
 
 (defn -main
   [& args]
-    (worker "crawler" '(fn [task] (println task))))
-;;    (push "crawler" (json/write-str {:url "http://api.indeed.com/ads/apisearch"
-;;                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"}))
+    (worker "crawler" '(fn [task] (println task)))
+    (push "crawler" (json/write-str {:url "http://api.indeed.com/ads/apisearch"
+                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"})))
 ;;    (println "req 2")
 ;;    (push "crawler" (json/write-str {:url "https://remoteok.io/index.json"})))

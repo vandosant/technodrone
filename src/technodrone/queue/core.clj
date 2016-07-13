@@ -12,22 +12,15 @@
 (defn work-complete []
   (println "Job's done!"))
 
-(comment
-(defn push-alert
-  [key watched old-state new-state]
-  (let [next-job (first new-state)]
-    (if (= (:queue next-job) "crawler")
-      (let [new-work (fetch-data (:msg next-job))]
-        (swap! work
-               (fn [current-work]
-                 (conj current-work new-work)))))))
+(add-watch queue :queue-push-alert
+  (fn push-alert
+    [key watched old-state new-state]
+      (println "State: " new-state)))
 
-(add-watch queue :queue-push-alert push-alert)
-)
-(defn push [queue-id msg]
+(defn push [queue-id task]
   (swap! queue
          (fn [current-state]
-           (conj current-state (hash-map :queue queue-id :msg msg)))))
+           (conj current-state (hash-map :queue queue-id :task task)))))
 
 (defn worker [queue-id task-fn]
   (swap! workers
