@@ -76,7 +76,7 @@
 
 (defn -main
   [& args]
-    (worker "crawler"))
+    (worker "crawler" '(fn [task] (println task))))
 ;;    (push "crawler" (json/write-str {:url "http://api.indeed.com/ads/apisearch"
 ;;                                   :params "q=web+developer&format=json&v=2&publisher=PUBLISHER_ID"}))
 ;;    (println "req 2")
