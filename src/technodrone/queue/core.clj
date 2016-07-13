@@ -27,3 +27,8 @@
   (swap! queue
          (fn [current-state]
            (conj current-state (hash-map :queue queue-id :msg msg)))))
+
+(defn worker [queue-id]
+  (swap! queue
+         (fn [current-state]
+           (conj current-state {queue-id []}))))
