@@ -10,5 +10,17 @@
 
   (testing "Using a worker."
     (:worker (worker "crawler" '(fn [task] (println task))))
-    (is (= nil
+    (is (= '({:task 1, :queue "crawler"})
            (push "crawler" 1)))))
+
+(deftest draining-queue
+  (testing "Draining a queue."
+    (:worker (worker "tester" '(fn [task] (println task))))
+    (push "crawler" 1)
+    (push "crawler" 2)
+    (push "crawler" 3)
+    (is (= 3
+           (length "tester")))
+    (drain "crawler")
+    (is (= 0
+           (length "tester")))))
