@@ -14,9 +14,7 @@ Open graph.html file that is generated.
 
 ## Testing
 
-    => (require 'technodrone.queue.core-test :reload-all)
-    => (in-ns 'technodrone.queue.core-test)
-    => (run-tests)
+    => lein test
 
 ## Options
 
