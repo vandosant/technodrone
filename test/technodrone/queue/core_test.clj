@@ -3,12 +3,15 @@
             [technodrone.queue.core :refer :all]))
 
 (deftest create-worker
-  (testing "Creating a worker."
-    (is (= nil
-           (:worker
-             (worker "crawler" '(fn [task] (println task)))))))
+  (testing "Creating a worker returns the work channel."
+    (is (satisfies? clojure.core.async.impl.protocols/Channel
+                    (worker "crawler" '(fn (do))))))
 
-  (testing "Using a worker."
+  (testing "Calling a worker returns the work channel."
+    (:worker (worker "crawler" '(fn [task] (println task))))
+    (is (satisfies? clojure.core.async.impl.protocols/Channel (worker "crawler"))))
+
+  (testing "Using a worker returns the task."
     (:worker (worker "crawler" '(fn [task] (println task))))
     (is (= '({:task 1, :queue "crawler"})
            (push "crawler" 1)))))
