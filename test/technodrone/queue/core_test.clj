@@ -5,16 +5,13 @@
 (deftest create-worker
   (testing "Creating a worker returns the work channel."
     (is (satisfies? clojure.core.async.impl.protocols/Channel
-                    (worker "crawler" '(fn (do))))))
+                    (worker "creator" '(fn (do)))))
+    (close "creator"))
 
   (testing "Calling a worker returns the work channel."
-    (:worker (worker "crawler" '(fn [task] (println task))))
-    (is (satisfies? clojure.core.async.impl.protocols/Channel (worker "crawler"))))
-
-  (testing "Using a worker returns the task."
-    (:worker (worker "crawler" '(fn [task] (println task))))
-    (is (= '({:task 1, :queue "crawler"})
-           (push "crawler" 1)))))
+    (:worker (worker "printer" '(fn [task] (println task))))
+    (is (satisfies? clojure.core.async.impl.protocols/Channel (worker "printer")))
+    (close "printer")))
 
 (deftest draining-queue
   (testing "Draining a queue."
@@ -22,19 +19,6 @@
     (push "crawler" 1)
     (push "crawler" 2)
     (push "crawler" 3)
-    (is (= 3
-           (length "crawler")))
-    (drain "crawler")
-    (is (= 0
-           (length "crawler")))))
-
-(deftest queue-execution-order
-  (testing "Queue is called in order")
-  (clear-results)
-  (:worker (worker "tester" '(fn [id] id)))
-  (push "tester" 1)
-  (push "tester" 2)
-  (push "tester" 3)
-  (drain "tester")
-  (is (= (results "tester")
-         [1 2 3])))
+    (:done (drain "crawler"))
+    (is (= :done :complete))
+    (close "crawler")))
