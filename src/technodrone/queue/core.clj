@@ -9,10 +9,10 @@
 (def workers (atom (hash-map)))
 
 (defn drain [queue-id]
-  (println queue-id))
+  (<!! (@queues queue-id)))
 
 (defn push [queue-id task]
-  (go >! (@queues queue-id) task))
+  (go (>!! (@queues queue-id) task)))
 
 (defn close [queue-id]
   (close! (@queues queue-id)))

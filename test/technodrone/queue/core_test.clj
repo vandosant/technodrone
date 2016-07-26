@@ -14,10 +14,8 @@
     (close "printer")))
 
 (deftest draining-queue
-  (testing "Draining a queue."
+  (testing "Returns the task."
     (:worker (worker "crawler" '(fn [task] (println task))))
-    (push "crawler" 1)
-    (push "crawler" 2)
     (push "crawler" 3)
-    (is (= :complete (drain "crawler")))
+    (is (= 3 (drain "crawler")))
     (close "crawler")))
