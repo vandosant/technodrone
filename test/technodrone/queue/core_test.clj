@@ -1,6 +1,7 @@
 (ns technodrone.queue.core-test
   (:require [clojure.test :refer :all]
-            [technodrone.queue.core :refer :all]))
+            [technodrone.queue.core :refer :all]
+            [clojure.java.io :as io]))
 
 (deftest create-worker
   (testing "Creating a worker returns the work channel."
@@ -18,4 +19,12 @@
     (worker "crawler" '(fn [task] (println task)))
     (push "crawler" 3)
     (is (= 3 (drain "crawler")))
-    (close "crawler")))
+    (close "crawler"))
+
+  (testing "Runs the task."
+    (worker "saver" '(fn [task] (spit "/tmp/draining_q_test" task)))
+    (push "saver" "test-task")
+    (drain "saver")
+    (is (= "test-task" (slurp "/tmp/draining_q_test")))
+    (close "saver")
+    (io/delete-file "/tmp/draining_q_test")))

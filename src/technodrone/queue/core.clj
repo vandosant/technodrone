@@ -9,7 +9,10 @@
 (def workers (atom (hash-map)))
 
 (defn drain [queue-id]
-  (<!! (@queues queue-id)))
+  (let [task (<!! (@queues queue-id))]
+    (and
+      (not (nil? task))
+      (get @workers queue-id) task)))
 
 (defn push [queue-id task]
   (go (>!! (@queues queue-id) task)))
