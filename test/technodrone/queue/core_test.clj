@@ -19,6 +19,5 @@
     (push "crawler" 1)
     (push "crawler" 2)
     (push "crawler" 3)
-    (:done (drain "crawler"))
-    (is (= :done :complete))
+    (is (= :complete (drain "crawler")))
     (close "crawler")))
