@@ -9,13 +9,13 @@
     (close "creator"))
 
   (testing "Calling a worker returns the work channel."
-    (:worker (worker "printer" '(fn [task] (println task))))
+    (worker "printer" '(fn [task] (println task)))
     (is (satisfies? clojure.core.async.impl.protocols/Channel (worker "printer")))
     (close "printer")))
 
 (deftest draining-queue
   (testing "Returns the task."
-    (:worker (worker "crawler" '(fn [task] (println task))))
+    (worker "crawler" '(fn [task] (println task)))
     (push "crawler" 3)
     (is (= 3 (drain "crawler")))
     (close "crawler")))
