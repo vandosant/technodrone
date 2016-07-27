@@ -27,4 +27,9 @@
     (push "adder" 2)
     (is (= 2 (drain "adder")))
     (is (= 3 (drain "adder")))
+    (close "adder"))
+
+  (testing "Returns :empty when there are no tasks"
+    (worker "adder" (fn [task] (+ 1 task)))
+    (is (= :empty (drain "adder")))
     (close "adder")))
