@@ -10,9 +10,9 @@
 
 (defn drain [queue-id]
   (let [task (<!! (@queues queue-id))]
-    (and
-      (not (nil? task))
-      (get @workers queue-id) task)))
+    (if task
+      ((@workers queue-id) task)
+      false)))
 
 (defn push [queue-id task]
   (go (>!! (@queues queue-id) task)))
