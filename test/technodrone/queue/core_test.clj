@@ -16,7 +16,20 @@
 
 (deftest draining-queue
   (testing "Runs the task."
-    (worker "saver" (fn [task] (+ 2 task)))
-    (push "saver" 3)
-    (is (= 5 (drain "saver")))
-    (close "saver")))
+    (worker "adder" (fn [task] (+ 2 task)))
+    (push "adder" 3)
+    (is (= 5 (drain "adder")))
+    (close "adder"))
+
+  (testing "Runs the tasks in order."
+    (worker "adder" (fn [task] (+ 1 task)))
+    (push "adder" 1)
+    (push "adder" 2)
+    (is (= 2 (drain "adder")))
+    (is (= 3 (drain "adder")))
+    (close "adder"))
+
+  (testing "Returns :empty when there are no tasks"
+    (worker "adder" (fn [task] (+ 1 task)))
+    (is (= :empty (drain "adder")))
+    (close "adder")))
