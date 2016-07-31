@@ -1,8 +1,8 @@
 (ns technodrone.handler
-  (:require [technodrone.views as :views]
-            [compojure.core :as :cc]
-            [compojure.handler :as handler]
-            [compojure.route :as route]))
+  (:require [compojure.core :as cc]
+            [compojure.route :as route]
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [technodrone.views :as views]))
 
 (cc/defroutes app-routes
   (cc/GET "/" [] (views/home-page))
@@ -17,4 +17,4 @@
   (route/not-found "Not Found"))
 
 (def app
-  (handler/site app-routes ))
+  (wrap-defaults app-routes site-defaults))
