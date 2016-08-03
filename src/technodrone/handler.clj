@@ -2,6 +2,9 @@
   (:require [compojure.core :as cc]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.session :refer [wrap-session]]
+            [ring.middleware.anti-forgery :refer :all]
+            [ring.middleware.session.cookie :refer [cookie-store]]
             [technodrone.views :as views]))
 
 (cc/defroutes app-routes
@@ -17,4 +20,7 @@
   (route/not-found "Not Found"))
 
 (def app
-  (wrap-defaults app-routes site-defaults))
+  (-> app-routes
+    (wrap-defaults site-defaults)
+    (wrap-session {:cookie-attrs {:max-age 3600}
+                   :store (cookie-store {:key "ahY9poQuaghahc7I"})})))
