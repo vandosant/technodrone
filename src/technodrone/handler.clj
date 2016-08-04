@@ -5,7 +5,9 @@
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.anti-forgery :refer :all]
             [ring.middleware.session.cookie :refer [cookie-store]]
-            [technodrone.views :as views]))
+            [ring.adapter.jetty :as jetty]
+            [technodrone.views :as views])
+  (:gen-class))
 
 (cc/defroutes app-routes
   (cc/GET "/" [] (views/home-page))
@@ -23,3 +25,11 @@
   (-> app-routes
     (wrap-defaults site-defaults)
     (wrap-session {:cookie-attrs {:max-age 3600}})))
+
+(defn -main
+  [& [port]]
+  (let [port (Integer. (or port
+                           (System/getenv "PORT")
+                           5000))]
+    (jetty/run-jetty #'app {:port  port
+                            :join? false})))
