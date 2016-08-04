@@ -22,5 +22,4 @@
 (def app
   (-> app-routes
     (wrap-defaults site-defaults)
-    (wrap-session {:cookie-attrs {:max-age 3600}
-                   :store (cookie-store {:key "ahY9poQuaghahc7I"})})))
+    (wrap-session {:cookie-attrs {:max-age 3600}})))

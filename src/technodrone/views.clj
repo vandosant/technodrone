@@ -1,6 +1,7 @@
 (ns technodrone.views
   (:require [technodrone.db :as db]
             [clojure.string :as str]
+            [ring.util.anti-forgery :as forgery]
             [hiccup.page :as hic-p]))
 
 (defn gen-page-head [title]
@@ -34,7 +35,8 @@
    [:form {:action "/add-location" :method "POST"}
     [:p "x value: " [:input {:type "text" :name "x"}]]
     [:p "y value: " [:input {:type "text" :name "y"}]]
-    [:p [:input {:type "submit" :value "submit location"}]]]))
+    [:p [:input {:type "submit" :value "submit location"}]]
+    (forgery/anti-forgery-field)]))
 
 (defn add-location-results-page
   [{:keys [x y]}]

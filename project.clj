@@ -12,6 +12,7 @@
                  [com.h2database/h2 "1.3.170"]
                  [compojure "1.5.1"]
                  [ring/ring-defaults "0.2.1"]
+                 [ring/ring-anti-forgery "1.0.1"]
                  [org.clojure/core.async "0.2.385"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler technodrone.handler/app}
